@@ -1,0 +1,4 @@
+{
+  "QueueURL": "https://sqs.ap-south-1.amazonaws.com/335927418600/process_automation_tasks",
+  "QueueRegion": "ap-south-1"
+}
