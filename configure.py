@@ -6,3 +6,4 @@ with open("config.json", "rt") as fp:
 # configuration global variables
 REGION_NAME = config["QueueRegion"]
 QUEUE_URL = config["QueueURL"]
+OUTPUT_FILEPATH = config["OutputFilePath"]
