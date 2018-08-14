@@ -2,7 +2,7 @@
 A lightweight orchestration framework to automate local tasks on AWS
 
 When installed on a worker instance, this project can be used to read
-through a task queue, assign and complete the tasks until the queue is emptyy.
+through a task queue, process the tasks until the queue becomes empty.
 
 Once the queue gets empty a notification is sent and the task_loop waits for more
 tasks to pop up.
@@ -34,7 +34,7 @@ If you are a developer, you can install the `requirements-dev.txt` instead.
 
 4. Configure boto
 
-A) For boto to work in any local machine, we need to enable programmatic access to your AWS account from that machine
+For boto to work in any local machine, we need to enable programmatic access to your AWS account from that machine
 
 Before you can begin using Boto 3, you should set up authentication credentials. Credentials for your AWS account can be found in the IAM Console. You can create or use an existing user. Go to manage access keys and generate a new set of keys.
 
@@ -67,13 +67,13 @@ Ref: https://boto3.readthedocs.io/en/latest/guide/quickstart.html#installation
 
 # How to use the program?
 
-On your server, run `tasks_processor.py`
+run `tasks_processor.py`
 
 ```
 python tasks_processor.py
 ```
 
-For testing, you can generate tasks at 1task/sec using `task_generator.py`
+For testing, you can generate tasks at 1 task/sec using `task_generator.py`. Edit `time.sleep(1)` change the frequency.
 
 What I do is, while `tasks_processor.py` is active, I run `task_generator.py` for a 
 few seconds and then kill (Ctrl+C), instantly you should see an SNS notification sent as queue is now empty.
