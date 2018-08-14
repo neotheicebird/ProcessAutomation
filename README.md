@@ -1,6 +1,12 @@
 # ProcessAutomation
 A lightweight orchestration framework to automate local tasks on AWS
 
+When installed on a worker instance, this project can be used to read
+through a task queue, assign and complete the tasks until the queue is emptyy.
+
+Once the queue gets empty a notification is sent and the task_loop waits for more
+tasks to pop up.
+
 # Setup Instructions
 
 ## Setting up the project
