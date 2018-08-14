@@ -1,3 +1,4 @@
+# Generate tasks to test the process automation script
 import boto3
 import time
 import datetime
@@ -23,4 +24,4 @@ if __name__ == "__main__":
             MessageBody=msg
         )
         counter.update()
-        time.sleep(1)
+        time.sleep(.01)

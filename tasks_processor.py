@@ -4,11 +4,32 @@ from configure import QUEUE_URL, REGION_NAME, OUTPUT_FILEPATH, SNS_TOPIC_ARN, SN
 import time
 import json
 import os
+import logging
+import botocore
+
+# basic logging setup
+logger = logging.getLogger("tasks_processor")
+logger.setLevel(logging.DEBUG)
+
+fh = logging.FileHandler('errors.log')
+fh.setLevel(logging.DEBUG)
+# create console handler with a higher log level
+ch = logging.StreamHandler()
+ch.setLevel(logging.ERROR)
+# create formatter and add it to the handlers
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+fh.setFormatter(formatter)
+ch.setFormatter(formatter)
+# add the handlers to the logger
+logger.addHandler(fh)
+logger.addHandler(ch)
+
 
 
 def setup():
     sqs_client = boto3.client("sqs", region_name=REGION_NAME)
     sns_client = boto3.client("sns", region_name=SNS_TOPIC_REGION)
+
     return sqs_client, sns_client
 
 def process(message_body):
@@ -36,35 +57,40 @@ def delete_task(sqs, handle):
 
 
 def notify(sns):
-    print("NOTIFYING")
+    print("Publishing `Complete`")
     message = "Complete"
+
     # using SNS
-    response = sns.publish(
+    try:
+        response = sns.publish(
         TopicArn=SNS_TOPIC_ARN,
         Message=message,
-    )
-    # print(response)
+        )
+    except botocore.exceptions.EndpointConnectionError:
+        logger.info("Unable to connect to AWS. SNS publish failed")
+        raise
 
 
 def get_tasks(sqs):
-    response = sqs.receive_message(
-        QueueUrl=QUEUE_URL,
-        AttributeNames=[
-            'All'
-        ],
-        MaxNumberOfMessages=10,
-        VisibilityTimeout=60,
-        WaitTimeSeconds=1
-    )
-
-    # print(response)
+    try:
+        response = sqs.receive_message(
+            QueueUrl=QUEUE_URL,
+            AttributeNames=[
+                'All'
+            ],
+            MaxNumberOfMessages=10,
+            VisibilityTimeout=60,
+            WaitTimeSeconds=1
+        )
+    except botocore.exceptions.EndpointConnectionError:
+        logger.info("Unable to connect to AWS. SQS receive messages failed")
+        raise
 
     try:
         for item in response["Messages"]:
             yield item["Body"], item["ReceiptHandle"]
     except KeyError:
         return None
-        # raise KeyError("Unable to read from SQS. Check your internet connection or if you have configured the project properly")
 
 
 def run_task_loop(sqs, sns):
@@ -87,5 +113,6 @@ def run_task_loop(sqs, sns):
 
 
 if __name__ == "__main__":
+    print("Starting automation")
     sqs, sns = setup()
     run_task_loop(sqs, sns)
