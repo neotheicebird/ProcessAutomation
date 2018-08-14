@@ -1,4 +1,7 @@
 {
   "QueueURL": "https://sqs.ap-south-1.amazonaws.com/335927418600/process_automation_tasks",
-  "QueueRegion": "ap-south-1"
+  "QueueRegion": "ap-south-1",
+  "OutputFilePath": "output.txt",
+  "SNSTopicARN": "arn:aws:sns:ap-south-1:335927418600:process_automation_status",
+  "SNSTopicRegion": "ap-south-1"
 }

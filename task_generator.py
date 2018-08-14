@@ -23,4 +23,4 @@ if __name__ == "__main__":
             MessageBody=msg
         )
         counter.update()
-        time.sleep(60)
+        time.sleep(1)

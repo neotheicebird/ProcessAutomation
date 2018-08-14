@@ -58,3 +58,27 @@ region=us-east-1
 Alternatively, you can pass a region_name when creating clients and resources.
 
 Ref: https://boto3.readthedocs.io/en/latest/guide/quickstart.html#installation
+
+# How to use the program?
+
+On your server, run `tasks_processor.py`
+
+```
+python tasks_processor.py
+```
+
+For testing, you can generate tasks at 1task/sec using `task_generator.py`
+
+What I do is, while `tasks_processor.py` is active, I run `task_generator.py` for a 
+few seconds and then kill (Ctrl+C), instantly you should see an SNS notification sent as queue is now empty.
+
+# Future work
+
+1. Assigning tasks to process() is now done serially, which can be updated to a concurrency model
+This may not be required if this automation script is spawned across multiple workers.
+
+2. A master script to orchestrate spawning of multiple worker instances and setup this automation script needs to be done.
+
+
+
+
