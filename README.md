@@ -65,6 +65,21 @@ Alternatively, you can pass a region_name when creating clients and resources.
 
 Ref: https://boto3.readthedocs.io/en/latest/guide/quickstart.html#installation
 
+# Configure the automation
+
+The configuration variables are present in `config.json`
+
+You can edit them based on information from AWS dashboards or local paths before running the program:
+
+```buildoutcfg
+{
+  "QueueURL": "https://sqs.ap-south-1.amazonaws.com/335927418600/process_automation_tasks",
+  "QueueRegion": "ap-south-1",
+  "OutputFilePath": "output.txt",
+  "SNSTopicARN": "arn:aws:sns:ap-south-1:335927418600:process_automation_status",
+  "SNSTopicRegion": "ap-south-1"
+}
+```
 # How to use the program?
 
 run `tasks_processor.py`
