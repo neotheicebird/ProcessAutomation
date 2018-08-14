@@ -6,6 +6,8 @@ import json
 import os
 import logging
 import botocore
+import enlighten
+
 
 # basic logging setup
 logger = logging.getLogger("tasks_processor")
@@ -94,8 +96,9 @@ def get_tasks(sqs):
 
 
 def run_task_loop(sqs, sns):
+    first_attempt = True
     notified = False
-
+    counter = enlighten.Counter(desc='Batches processed', unit='batches')
     while True:
         found_msgs = False  # flag to check if any msgs were read in an attempt
         for task_body, task_handle in get_tasks(sqs=sqs):
@@ -103,16 +106,18 @@ def run_task_loop(sqs, sns):
             delete_task(sqs, task_handle)
             found_msgs = True
             notified = False
+            first_attempt = False
 
-        if not found_msgs and not notified:
+        if not found_msgs and not notified and not first_attempt:
             # if no more tasks present, i.e a batch is completely processed, send notification
             notify(sns=sns)
             notified = True
+            counter.update()
 
         time.sleep(0.1)
 
 
 if __name__ == "__main__":
-    print("Starting automation")
+    print("Starting tasks automation")
     sqs, sns = setup()
     run_task_loop(sqs, sns)
