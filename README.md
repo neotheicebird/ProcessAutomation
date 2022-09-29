@@ -30,7 +30,7 @@ source processAutomationEnv/bin/activate
 pip install -r requirements.txt
 ```
 
-If you are a developer, you can install the `requirements-dev.txt` instead.
+you can also install the `requirements-dev.txt` to setup a dev env.
 
 4. Configure boto
 
